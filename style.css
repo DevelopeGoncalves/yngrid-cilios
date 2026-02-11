@@ -85,9 +85,14 @@ header h1 { font-size: 4.5rem; margin-bottom: 5px; text-shadow: 0 2px 10px rgba(
 .care { background-color: var(--soft-pink); } /* Fundo alternado */
 
 .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
-.service-card {
-    background: var(--white); padding: 30px; border-radius: var(--radius);
-    text-align: center; transition: 0.3s; border: 2px solid #f9f9f9;
+/* Estilo para as novas imagens dos serviços */
+.service-card img {
+    width: 100%;              /* Ocupa toda a largura do cartão */
+    height: 200px;            /* Altura fixa para todos ficarem iguais */
+    object-fit: cover;        /* Corta a imagem para não esticar/deformar */
+    border-radius: 8px;       /* Bordas arredondadas */
+    margin-bottom: 15px;      /* Espaço entre a foto e o título */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Sombra suave na foto */
 }
 .service-card:hover { transform: translateY(-5px); border-color: var(--primary-pink); box-shadow: var(--shadow); }
 .price { color: var(--primary-pink); font-weight: 700; font-size: 1.4rem; display: block; margin: 15px 0; }
