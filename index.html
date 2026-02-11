@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>Yngrid Cílios | Realce seu Olhar</title>
+    <link rel="icon" type="image/png" href="img/favicon.png">
+
+    <meta property="og:title" content="Yngrid Cílios - Studio Beauty">
+    <meta property="og:description" content="Especialista em Volume Brasileiro, Russo e Lash Lifting. Agende seu horário!">
+    <meta property="og:image" content="img/capa.jpg">
+    <meta name="theme-color" content="#FF69B4">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <p style="text-transform: uppercase; letter-spacing: 3px; font-size: 0.9rem;">Studio Beauty</p>
+            <h1 class="brand-title">Yngrid Cílios</h1>
+            <p>LASH DESIGNER</p>
+            <button class="btn-pink" onclick="openModal()">Agendar Horário</button>
+        </div>
+    </header>
+
+    <section class="about">
+        <div class="container about-content">
+            <div class="about-img">
+                <img src="img/perfil.jpg" alt="Yngrid Lash Designer">
+            </div>
+            <div class="about-text">
+                <h2 style="font-family: 'Great Vibes', cursive; font-size: 3rem; color: var(--primary-pink);">Olá, sou a Yngrid!</h2>
+                <h3 style="margin-bottom: 20px;">Realçando sua beleza natural</h3>
+                <p>Apaixonada por elevar a autoestima das minhas clientes. Meu trabalho é desenhar o olhar perfeito para você, com técnicas seguras e materiais de alta qualidade.</p>
+                <br>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <span style="background: white; padding: 5px 15px; border-radius: 20px; color: var(--primary-pink); border: 1px solid var(--primary-pink); font-size: 0.9rem;">🌸 Volume Brasileiro</span>
+                    <span style="background: white; padding: 5px 15px; border-radius: 20px; color: var(--primary-pink); border: 1px solid var(--primary-pink); font-size: 0.9rem;">🌸 Lash Lifting</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="care">
+        <div class="container">
+            <h2 class="section-title">Cuidados Essenciais</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-tint" style="font-size: 2.5rem; color: #FF69B4; margin-bottom: 15px;"></i>
+                    <h4>24h sem molhar</h4>
+                    <p style="font-size: 0.9rem; color: #666;">Evite vapor e água quente no primeiro dia para fixação total.</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-ban" style="font-size: 2.5rem; color: #FF69B4; margin-bottom: 15px;"></i>
+                    <h4>Zero Rímel</h4>
+                    <p style="font-size: 0.9rem; color: #666;">Não use rímel ou curvex, eles podem quebrar a extensão.</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-soap" style="font-size: 2.5rem; color: #FF69B4; margin-bottom: 15px;"></i>
+                    <h4>Higienize Sempre</h4>
+                    <p style="font-size: 0.9rem; color: #666;">Lave diariamente com shampoo neutro para manter a saúde.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services">
+        <div class="container">
+            <h2 class="section-title">Menu de Serviços</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>Volume Brasileiro</h3>
+                    <p>Fios em formato Y para volume moderado e elegante.</p>
+                    <span class="price">R$ 150,00</span>
+                    <button class="btn-pink" onclick="openModalWithService('Volume Brasileiro')">Agendar</button>
+                </div>
+                <div class="service-card">
+                    <h3>Volume Russo</h3>
+                    <p>Fans artesanais para um olhar marcante e cheio.</p>
+                    <span class="price">R$ 180,00</span>
+                    <button class="btn-pink" onclick="openModalWithService('Volume Russo')">Agendar</button>
+                </div>
+                <div class="service-card">
+                    <h3>Lash Lifting</h3>
+                    <p>Curvatura e tratamento natural dos seus próprios cílios.</p>
+                    <span class="price">R$ 120,00</span>
+                    <button class="btn-pink" onclick="openModalWithService('Lash Lifting')">Agendar</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="gallery">
+        <div class="container">
+            <h2 class="section-title">Resultados Incríveis</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item"><img src="img/foto1.jpg" alt="Trabalho 1"></div>
+                <div class="gallery-item"><img src="img/foto2.jpg" alt="Trabalho 2"></div>
+                <div class="gallery-item"><img src="img/foto3.jpg" alt="Trabalho 3"></div>
+                <div class="gallery-item"><img src="img/foto4.jpg" alt="Trabalho 4"></div>
+            </div>
+            <p style="text-align: center; margin-top: 30px;">
+                <a href="https://instagram.com/yngrid_cilioss" target="_blank" style="color: var(--primary-pink); font-weight: 600; font-size: 1.1rem;">
+                    <i class="fab fa-instagram"></i> Siga @yngrid_cilioss
+                </a>
+            </p>
+        </div>
+    </section>
+
+    <section class="location">
+        <div class="container">
+            <h2 class="section-title" style="margin-bottom: 20px;">Onde Estamos</h2>
+            <p style="margin-bottom: 20px; color: #666; font-size: 1.1rem;">Rua Exemplo, 123 - Centro, Sua Cidade - ES</p>
+            
+            <a href="https://www.google.com.br/maps" target="_blank" class="btn-pink" style="background-color: var(--text-black);">
+                <i class="fas fa-map-marker-alt"></i> Abrir no GPS
+            </a>
+        </div>
+    </section>
+
+    <section class="faq">
+        <div class="container" style="max-width: 800px;">
+            <h2 class="section-title">Dúvidas Frequentes</h2>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <h4>Quanto tempo dura? <i class="fas fa-chevron-down"></i></h4>
+                <p>Entre 15 a 25 dias até a manutenção, dependendo dos cuidados e crescimento natural.</p>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <h4>Estraga os cílios? <i class="fas fa-chevron-down"></i></h4>
+                <p>Não! Com isolamento correto e peso adequado, a extensão é segura.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container" style="text-align: center; padding: 40px 0; color: #888; font-size: 0.9rem;">
+            <p>&copy; 2024 Yngrid Cílios. Feito com amor 💖</p>
+        </div>
+    </footer>
+
+    <div class="floating-cta">
+        <button class="btn-pink" style="width: 100%; box-shadow: 0 5px 20px rgba(0,0,0,0.3);" onclick="openModal()">
+            Agendar Agora 🌸
+        </button>
+    </div>
+
+    <div class="modal-overlay" id="schedulingModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h3 style="text-align: center; margin-bottom: 5px; color: var(--primary-pink); font-family: 'Great Vibes', cursive; font-size: 2.5rem;">Agende seu Momento</h3>
+            <p style="text-align: center; color: #666; margin-bottom: 20px;">Preencha para garantir sua vaga.</p>
+            
+            <form id="bookingForm" onsubmit="submitBooking(event)">
+                <div class="form-group">
+                    <label>Seu Nome</label>
+                    <input type="text" id="clientName" required placeholder="Digite seu nome">
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp</label>
+                    <input type="tel" id="clientPhone" required placeholder="(DDD) 99999-9999">
+                </div>
+                <div class="form-group">
+                    <label>Procedimento</label>
+                    <select id="serviceSelect">
+                        <option value="Volume Brasileiro">Volume Brasileiro - R$ 150</option>
+                        <option value="Volume Russo">Volume Russo - R$ 180</option>
+                        <option value="Lash Lifting">Lash Lifting - R$ 120</option>
+                    </select>
+                </div>
+                <div class="form-group" style="display: flex; gap: 10px;">
+                    <div style="flex: 1;">
+                        <label>Data</label>
+                        <input type="date" id="dateSelect" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Horário</label>
+                        <select id="timeSelect">
+                            <option value="09:00">09:00</option>
+                            <option value="11:00">11:00</option>
+                            <option value="14:00">14:00</option>
+                            <option value="16:00">16:00</option>
+                            <option value="18:30">18:30</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="background: #FFF0F5; padding: 10px; border-radius: 8px; font-size: 0.75rem; color: #555; margin-bottom: 15px; border: 1px dashed #FF69B4; text-align: center;">
+                    <p><strong>⚠️ Importante:</strong> Tolerância de atraso de 15 minutos. Cancelamentos com 24h de antecedência.</p>
+                </div>
+
+                <button type="submit" class="btn-pink" style="width: 100%;">Confirmar Agendamento</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('schedulingModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function openModalWithService(serviceName) {
+            document.getElementById('serviceSelect').value = serviceName;
+            openModal();
+        }
+        function closeModal() {
+            document.getElementById('schedulingModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        function toggleFaq(element) {
+            element.classList.toggle('active');
+            let icon = element.querySelector('i');
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
+        }
+        function submitBooking(e) {
+            e.preventDefault();
+            const name = document.getElementById('clientName').value;
+            const phone = document.getElementById('clientPhone').value;
+            const service = document.getElementById('serviceSelect').value;
+            const date = document.getElementById('dateSelect').value;
+            const time = document.getElementById('timeSelect').value;
+            
+            const newBooking = { id: Date.now(), name, phone, service, date, time, status: 'pendente' };
+            let bookings = JSON.parse(localStorage.getItem('yngrid_appointments')) || [];
+            bookings.push(newBooking);
+            localStorage.setItem('yngrid_appointments', JSON.stringify(bookings));
+            
+            alert(`Obrigada, ${name}! 💕 Solicitação enviada.`);
+            closeModal();
+            e.target.reset();
+        }
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('schedulingModal')) closeModal();
+        }
+    </script>
+</body>
+</html>
