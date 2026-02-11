@@ -3,110 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Admin | Yngrid</title>
+    <title>Painel Admin | Yngrid Cílios</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
     <style> 
         body { background: #FFF0F5; padding-bottom: 0; } 
-        .admin-container { max-width: 800px; margin: 0 auto; padding: 20px; }
-        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #ffeef5; }
+        .admin-container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .card { 
+            background: white; padding: 20px; border-radius: 15px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; 
+            border: 1px solid #ffeef5; 
+        }
         .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
-        .badge-pending { background: #fff3cd; color: #856404; }
-        .badge-success { background: #d4edda; color: #155724; }
+        .badge-pending { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .badge-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        
         .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         h2 { color: #FF69B4; font-family: 'Montserrat', sans-serif; }
+
+        /* Estilos das Novas Abas */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { 
+            background: white; border: 1px solid #FF69B4; color: #FF69B4; padding: 10px 20px; 
+            border-radius: 20px; cursor: pointer; flex: 1; transition: 0.3s; font-weight: 600;
+        }
+        .tab-btn.active { background: #FF69B4; color: white; box-shadow: 0 4px 10px rgba(255,105,180,0.3); }
+        .tab-content { display: none; animation: fadeIn 0.3s; }
+        .tab-content.active { display: block; }
+
+        /* Inputs do Admin */
+        input, select { 
+            background: #fff; border: 1px solid #ddd; color: #333; 
+            padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 15px; 
+        }
+        label { font-size: 0.9rem; color: #555; font-weight: 600; margin-bottom: 5px; display: block; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="admin-container">
         <div class="admin-header">
-            <h2 style="margin: 0;">Painel de Controle 🌸</h2>
+            <h2 style="margin: 0;">Painel Yngrid 🌸</h2>
             <a href="index.html" target="_blank" class="btn-pink" style="padding: 10px 20px; font-size: 0.8rem;">
                 <i class="fas fa-eye"></i> Ver Site
             </a>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-            <div class="card" style="text-align: center; border-left: 5px solid #FF69B4;">
-                <span style="font-size: 2rem; font-weight: bold; color: #333;" id="totalCount">0</span>
-                <p style="margin: 0; font-size: 0.8rem; color: #FF69B4; font-weight: bold;">CLIENTES</p>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('agenda')">📅 Agenda</button>
+            <button class="tab-btn" onclick="openTab('relatorios')">📊 Relatórios</button>
+            <button class="tab-btn" onclick="openTab('config')">⚙️ Configuração</button>
+        </div>
+
+        <div id="agenda" class="tab-content active">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                <div class="card" style="text-align: center; border-left: 5px solid #FF69B4;">
+                    <span style="font-size: 2rem; font-weight: bold; color: #333;" id="totalCount">0</span>
+                    <p style="margin: 0; font-size: 0.8rem; color: #FF69B4; font-weight: bold;">AGENDAMENTOS</p>
+                </div>
+                <div class="card" style="text-align: center; border-left: 5px solid #28a745;">
+                    <span style="font-size: 2rem; font-weight: bold; color: #333;" id="moneyCount">R$ 0</span>
+                    <p style="margin: 0; font-size: 0.8rem; color: #28a745; font-weight: bold;">ESTIMADO</p>
+                </div>
             </div>
-            <div class="card" style="text-align: center; border-left: 5px solid #28a745;">
-                <span style="font-size: 2rem; font-weight: bold; color: #333;" id="moneyCount">R$ 0</span>
-                <p style="margin: 0; font-size: 0.8rem; color: #28a745; font-weight: bold;">ESTIMADO</p>
+
+            <div class="card">
+                <h3 style="font-size: 1.2rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; color: #333;">
+                    Próximas Clientes
+                    <button onclick="loadAppointments()" style="float: right; border: none; background: none; cursor: pointer; color: #FF69B4;"><i class="fas fa-sync"></i></button>
+                </h3>
+                <div id="listContainer"></div>
             </div>
         </div>
 
-        <div class="card">
-            <h3 style="font-size: 1.2rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; color: #333;">
-                Agenda Recente
-                <button onclick="loadAppointments()" style="float: right; border: none; background: none; cursor: pointer; color: #FF69B4;"><i class="fas fa-sync"></i></button>
-            </h3>
-            <div id="listContainer"></div>
+        <div id="relatorios" class="tab-content">
+            <div class="card">
+                <h3 style="color: #FF69B4;">🔍 Histórico de Cliente</h3>
+                <input type="text" id="searchClient" placeholder="Digite o nome da cliente..." onkeyup="searchHistory()" style="margin-top:10px;">
+                <div id="historyResult" style="max-height: 200px; overflow-y: auto;"></div>
+            </div>
+            
+            <div class="card">
+                <h3 style="color: #FF69B4;">📈 Faturamento Mensal</h3>
+                <canvas id="revenueChart"></canvas>
+            </div>
         </div>
+
+        <div id="config" class="tab-content">
+            <div class="card">
+                <h3 style="color: #FF69B4;">⚙️ Regras da Agenda</h3>
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">Esses horários aparecerão automaticamente no site.</p>
+                
+                <label>Abertura do Studio</label>
+                <input type="time" id="configOpen" value="09:00">
+                
+                <label>Fechamento do Studio</label>
+                <input type="time" id="configClose" value="19:00">
+                
+                <label>Tempo Médio por Procedimento (minutos)</label>
+                <input type="number" id="configDuration" value="120" placeholder="Ex: 120 para 2 horas">
+
+                <button class="btn-pink" onclick="saveConfig()" style="width: 100%; margin-top: 10px;">Salvar Configurações</button>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        window.onload = loadAppointments;
+        // --- INICIALIZAÇÃO ---
+        window.onload = function() {
+            loadAppointments();
+            loadConfig();
+            renderChart();
+        };
+
+        function openTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // --- PREÇOS ESPECÍFICOS YNGRID ---
+        function getPrice(serviceName) {
+            if(serviceName.includes('Brasileiro')) return 150;
+            if(serviceName.includes('Russo')) return 180;
+            if(serviceName.includes('Lifting')) return 120;
+            return 0;
+        }
+
+        // --- AGENDA ---
         function loadAppointments() {
             const bookings = JSON.parse(localStorage.getItem('yngrid_appointments')) || [];
             const container = document.getElementById('listContainer');
             document.getElementById('totalCount').innerText = bookings.length;
+            
             let totalMoney = 0;
+            bookings.forEach(b => totalMoney += getPrice(b.service));
+            document.getElementById('moneyCount').innerText = 'R$ ' + totalMoney;
 
             if (bookings.length === 0) {
                 container.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">Nenhum agendamento ainda.</p>';
-                document.getElementById('moneyCount').innerText = 'R$ 0';
                 return;
             }
 
             bookings.sort((a, b) => b.id - a.id);
             let html = '';
             bookings.forEach(b => {
-                if(b.service.includes('150')) totalMoney += 150;
-                else if(b.service.includes('180')) totalMoney += 180;
-                else if(b.service.includes('120')) totalMoney += 120;
-                else totalMoney += 90;
-
                 let dateParts = b.date.split('-');
                 let dateFormatted = `${dateParts[2]}/${dateParts[1]}`;
                 let badge = b.status === 'pendente' ? `<span class="badge badge-pending">Pendente</span>` : `<span class="badge badge-success">Confirmado</span>`;
 
+                // Link Whatsapp Personalizado para você confirmar com ela
+                const textDefault = `Olá ${b.name}! Seu agendamento de ${b.service} para ${dateFormatted} às ${b.time} está confirmado! 🦋`;
+                const whatsappUrl = `https://wa.me/55${b.phone.replace(/\D/g,'')}?text=${encodeURIComponent(textDefault)}`;
+
                 html += `
-                    <div style="border-bottom: 1px solid #f9f9f9; padding: 15px 0; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="border-bottom: 1px solid #f0f0f0; padding: 15px 0; display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <div style="font-weight: bold; font-size: 1rem; color: #333;">${b.name}</div>
                             <div style="font-size: 0.85rem; color: #FF69B4;">${b.service}</div>
-                            <div style="font-size: 0.8rem; color: #888; margin-top: 4px;"><i class="far fa-calendar"></i> ${dateFormatted} às ${b.time}</div>
+                            <div style="font-size: 0.8rem; color: #888;"><i class="far fa-calendar"></i> ${dateFormatted} às ${b.time}</div>
                         </div>
-                        <div style="text-align: right; display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
-                            ${badge}
-                            <div style="display: flex; gap: 10px; align-items: center;">
-                                <a href="https://wa.me/55${b.phone.replace(/\D/g,'')}" target="_blank" style="color: #25D366; font-size: 1.3rem;"><i class="fab fa-whatsapp"></i></a>
-                                <button onclick="confirmItem(${b.id})" style="border: none; background: none; color: #28a745; cursor: pointer; font-size: 1.1rem;"><i class="fas fa-check-circle"></i></button>
-                                <button onclick="deleteItem(${b.id})" style="border: none; background: none; color: #dc3545; cursor: pointer; font-size: 1.1rem;"><i class="fas fa-trash"></i></button>
-                            </div>
+                        <div style="text-align: right; display: flex; gap: 10px;">
+                            <a href="${whatsappUrl}" target="_blank" style="color: #25D366; font-size: 1.2rem;"><i class="fab fa-whatsapp"></i></a>
+                            <button onclick="confirmItem(${b.id})" style="color: #28a745; background:none; border:none; cursor:pointer; font-size: 1.1rem;"><i class="fas fa-check-circle"></i></button>
+                            <button onclick="deleteItem(${b.id})" style="color: #dc3545; background:none; border:none; cursor:pointer; font-size: 1.1rem;"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 `;
             });
             container.innerHTML = html;
-            document.getElementById('moneyCount').innerText = 'R$ ' + totalMoney;
         }
+
         function confirmItem(id) {
             let bookings = JSON.parse(localStorage.getItem('yngrid_appointments')) || [];
             bookings = bookings.map(b => b.id === id ? {...b, status: 'confirmado'} : b);
             localStorage.setItem('yngrid_appointments', JSON.stringify(bookings));
             loadAppointments();
+            renderChart();
         }
+
         function deleteItem(id) {
             if(confirm('Tem certeza que deseja excluir?')) {
                 let bookings = JSON.parse(localStorage.getItem('yngrid_appointments')) || [];
                 bookings = bookings.filter(b => b.id !== id);
                 localStorage.setItem('yngrid_appointments', JSON.stringify(bookings));
                 loadAppointments();
+                renderChart();
             }
+        }
+
+        // --- CONFIGURAÇÃO ---
+        function saveConfig() {
+            const config = {
+                open: document.getElementById('configOpen').value,
+                close: document.getElementById('configClose').value,
+                duration: document.getElementById('configDuration').value
+            };
+            localStorage.setItem('yngrid_config', JSON.stringify(config));
+            alert('Configurações salvas! A agenda do site foi atualizada.');
+        }
+
+        function loadConfig() {
+            const config = JSON.parse(localStorage.getItem('yngrid_config'));
+            if(config) {
+                document.getElementById('configOpen').value = config.open;
+                document.getElementById('configClose').value = config.close;
+                document.getElementById('configDuration').value = config.duration;
+            }
+        }
+
+        // --- RELATÓRIOS ---
+        function searchHistory() {
+            const term = document.getElementById('searchClient').value.toLowerCase();
+            const bookings = JSON.parse(localStorage.getItem('yngrid_appointments')) || [];
+            const resultDiv = document.getElementById('historyResult');
+            
+            if(term.length < 2) { resultDiv.innerHTML = ''; return; }
+
+            const filtered = bookings.filter(b => b.name.toLowerCase().includes(term));
+            let html = '';
+            filtered.forEach(b => {
+                html += `<div style="padding: 10px; border-bottom: 1px solid #eee; font-size: 0.85rem;">
+                            <span style="color:#333; font-weight:bold;">${b.name}</span> <br>
+                            <span style="color:#FF69B4">${b.service}</span> - 
+                            <span style="color:#666">${b.date}</span>
+                         </div>`;
+            });
+            resultDiv.innerHTML = html || '<p style="color:#999; padding:10px;">Nenhum cliente encontrado.</p>';
+        }
+
+        function renderChart() {
+            const bookings = JSON.parse(localStorage.getItem('yngrid_appointments')) || [];
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            
+            let dataMap = {};
+            bookings.forEach(b => {
+                if(b.status === 'confirmado') {
+                    let month = b.date.substring(0, 7); // ex: 2024-02
+                    dataMap[month] = (dataMap[month] || 0) + getPrice(b.service);
+                }
+            });
+
+            const labels = Object.keys(dataMap).sort();
+            const data = labels.map(l => dataMap[l]);
+
+            if(window.myChart) window.myChart.destroy();
+
+            window.myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Faturamento (R$)',
+                        data: data,
+                        backgroundColor: '#FF69B4',
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
         }
     </script>
 </body>

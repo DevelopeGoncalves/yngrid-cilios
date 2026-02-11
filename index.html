@@ -9,7 +9,6 @@
 
     <meta property="og:title" content="Yngrid Cílios - Studio Beauty">
     <meta property="og:description" content="Especialista em Volume Brasileiro, Russo e Lash Lifting. Agende seu horário!">
-    <meta property="og:image" content="img/capa.jpg">
     <meta name="theme-color" content="#FF69B4">
 
     <link rel="stylesheet" href="style.css">
@@ -71,6 +70,7 @@
     <section class="services">
         <div class="container">
             <h2 class="section-title">Menu de Serviços</h2>
+            <p style="text-align: center; color: #999; margin-bottom: 30px;">Escolha seu procedimento e finalize o agendamento pelo WhatsApp.</p>
             <div class="services-grid">
                 
                 <div class="service-card">
@@ -185,12 +185,8 @@
                     </div>
                     <div style="flex: 1;">
                         <label>Horário</label>
-                        <select id="timeSelect">
-                            <option value="09:00">09:00</option>
-                            <option value="11:00">11:00</option>
-                            <option value="14:00">14:00</option>
-                            <option value="16:00">16:00</option>
-                            <option value="18:30">18:30</option>
+                        <select id="timeSelect" required>
+                            <option value="">Selecione a data...</option>
                         </select>
                     </div>
                 </div>
@@ -199,15 +195,23 @@
                     <p><strong>⚠️ Importante:</strong> Tolerância de atraso de 15 minutos. Cancelamentos com 24h de antecedência.</p>
                 </div>
 
+                <p style="font-size: 0.8rem; color: #999; text-align: center; margin-bottom: 10px;">
+                    <i class="fab fa-whatsapp"></i> Ao confirmar, você enviará o pedido para meu WhatsApp.
+                </p>
+
                 <button type="submit" class="btn-pink" style="width: 100%;">Confirmar Agendamento</button>
             </form>
         </div>
     </div>
 
     <script>
+        // --- LÓGICA DE INTERFACE ---
         function openModal() {
             document.getElementById('schedulingModal').classList.add('active');
             document.body.style.overflow = 'hidden';
+            // Trava data no hoje
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dateSelect').min = today;
         }
         function openModalWithService(serviceName) {
             document.getElementById('serviceSelect').value = serviceName;
@@ -223,6 +227,62 @@
             icon.classList.toggle('fa-chevron-down');
             icon.classList.toggle('fa-chevron-up');
         }
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('schedulingModal')) closeModal();
+        }
+
+        // --- SISTEMA INTELIGENTE DE HORÁRIOS ---
+        
+        // Dispara quando muda a data
+        document.getElementById('dateSelect').addEventListener('change', function() {
+            generateTimeSlots(this.value);
+        });
+
+        function generateTimeSlots(selectedDate) {
+            const timeSelect = document.getElementById('timeSelect');
+            timeSelect.innerHTML = '<option value="">Carregando...</option>';
+
+            // 1. Pega Config do Admin (ou usa padrão)
+            const config = JSON.parse(localStorage.getItem('yngrid_config')) || { open: "09:00", close: "19:00", duration: "120" };
+            
+            // 2. Verifica agendamentos já existentes
+            const bookings = JSON.parse(localStorage.getItem('yngrid_appointments')) || [];
+            const bookingsDoDia = bookings
+                .filter(b => b.date === selectedDate)
+                .map(b => b.time);
+
+            // 3. Gera lista de horários
+            let slots = [];
+            let [horaAtual, minAtual] = config.open.split(':').map(Number);
+            let [horaFim, minFim] = config.close.split(':').map(Number);
+            let duracao = parseInt(config.duration);
+
+            while (true) {
+                let timeString = `${String(horaAtual).padStart(2, '0')}:${String(minAtual).padStart(2, '0')}`;
+                
+                if (horaAtual > horaFim || (horaAtual === horaFim && minAtual > minFim)) break;
+
+                // Só adiciona se o horário estiver livre
+                if (!bookingsDoDia.includes(timeString)) {
+                    slots.push(timeString);
+                }
+
+                // Incrementa tempo
+                minAtual += duracao;
+                while (minAtual >= 60) {
+                    minAtual -= 60;
+                    horaAtual += 1;
+                }
+            }
+
+            if (slots.length > 0) {
+                timeSelect.innerHTML = slots.map(t => `<option value="${t}">${t}</option>`).join('');
+            } else {
+                timeSelect.innerHTML = '<option value="">Sem horários livres</option>';
+            }
+        }
+
+        // --- ENVIO COM WHATSAPP ---
         function submitBooking(e) {
             e.preventDefault();
             const name = document.getElementById('clientName').value;
@@ -230,18 +290,37 @@
             const service = document.getElementById('serviceSelect').value;
             const date = document.getElementById('dateSelect').value;
             const time = document.getElementById('timeSelect').value;
+
+            if(!time || time === "Sem horários livres") {
+                alert("Por favor, escolha um horário válido.");
+                return;
+            }
             
+            // 1. Salva no sistema (Admin)
             const newBooking = { id: Date.now(), name, phone, service, date, time, status: 'pendente' };
             let bookings = JSON.parse(localStorage.getItem('yngrid_appointments')) || [];
             bookings.push(newBooking);
             localStorage.setItem('yngrid_appointments', JSON.stringify(bookings));
             
-            alert(`Obrigada, ${name}! 💕 Solicitação enviada.`);
+            // 2. Gera Link do WhatsApp (PARA VOCÊ RECEBER)
+            const seuNumero = "5527999038665"; // SEU NÚMERO
+            let dataFormatada = date.split('-').reverse().join('/');
+            
+            const mensagemCliente = encodeURIComponent(
+                `Olá Yngrid! 🌸 Gostaria de confirmar meu horário:\n\n` +
+                `👤 *Nome:* ${name}\n` +
+                `👁️ *Procedimento:* ${service}\n` +
+                `📅 *Data:* ${dataFormatada}\n` +
+                `⏰ *Horário:* ${time}\n\n` +
+                `Aguardo confirmação!`
+            );
+            
+            alert(`Tudo certo, ${name}! Envie a mensagem no WhatsApp a seguir para finalizar.`);
+            window.open(`https://wa.me/${seuNumero}?text=${mensagemCliente}`, '_blank');
+
             closeModal();
             e.target.reset();
-        }
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('schedulingModal')) closeModal();
+            document.getElementById('timeSelect').innerHTML = '<option value="">Selecione a data...</option>';
         }
     </script>
 </body>
